@@ -1,7 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./Services.css";
 
 const Services = () => {
+  // Smooth scroll to the 'Contact' section when the button is clicked
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    section?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const viewportHeight = window.visualViewport?.height || document.documentElement.clientHeight || window.innerHeight;
+
+
+
   const services = [
     {
       label: "Software",
@@ -33,44 +43,106 @@ const Services = () => {
     },
   ];
 
-  // const [currentService, setCurrentService] = useState(0);
-  // const [isTransitioning, setIsTransitioning] = useState(false);
+  const [currentServiceIndex, setCurrentServiceIndex] = useState(0);
+  const [visibleAbove, setVisibleAbove] = useState<number[]>([]);
+  const [visibleBelow, setVisibleBelow] = useState<number[]>([]);
+  const serviceRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // const handleCardClick = (index: number) => {
-  //   if (index !== currentService && !isTransitioning) {
-  //     setCurrentService(index);
-  //     setIsTransitioning(true);
-  //     setTimeout(() => setIsTransitioning(false), 500); 
-  //   }
-  // };
+  // Scroll to a specific service
+  const scrollToService = (index: number) => {
+    const targetService = serviceRefs.current[index];
+    if (targetService) {
+      targetService.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
 
+  // Update visibleAbove and visibleBelow based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const servicePositions = serviceRefs.current.map((ref) =>
+        ref ? ref.getBoundingClientRect().top : 0
+      );
 
-  // const handleScroll = (index: number) => {
-  //   const section = document.getElementById("service-card.active");
-  //   if (section) {
-  
-  //     window.dispatchEvent(new Event("smooth-scroll-start"));
-  
-  //     section.scrollIntoView({ behavior: "smooth" });
-  
-     
-  //     setTimeout(() => {
-  //       window.dispatchEvent(new Event("smooth-scroll-end"));
-  //     }, 1000); 
-  //   }
-  // };
+      const visibleAboveIndices: number[] = [];
+      const visibleBelowIndices: number[] = [];
+
+      // Determine which services are above and below the current one
+      servicePositions.forEach((pos, index) => {
+        if (pos < window.innerHeight * 0.1 && index < services.length - 1) {
+          // Exclude the last card from visibleAbove
+          visibleAboveIndices.push(index);
+        }
+        if (pos > window.innerHeight * 0.9) {
+          visibleBelowIndices.push(index);
+        }
+      });
+
+      setVisibleAbove(visibleAboveIndices);
+      setVisibleBelow(visibleBelowIndices);
+
+      // Update current service index
+      const currentIndex = servicePositions.findIndex(
+        (position) =>
+          position >= viewportHeight * 0.01 &&
+          position <= viewportHeight * 0.95
+      );
+
+      if (currentIndex !== -1) setCurrentServiceIndex(currentIndex);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
 
   return (
     <div className="services-container">
-      {services.map((service, index) => {
-        
+      <div className="navbars">
+        {/* Top Navbar */}
+        <div className="services-navbar top-navbar">
+          {visibleAbove.map((index) => (
+            <div key={index} className="above-button-wrapper">
+              <button
+                className={`above-button ${services[index].className}`}
+                onClick={() => scrollToService(index)}
+              >
+                <div className="button-text">
+                  {services[index].label}
+                </div>
+              </button>
+            </div>
+          ))}
+        </div>
 
-        return (
+        {/* Bottom Navbar */}
+        <div className="services-navbar bottom-navbar">
+          {visibleBelow.map((index) => (
+            <div key={index} className="below-button-wrapper">
+              <button
+                className={`below-button ${services[index].className}`}
+                onClick={() => scrollToService(index)}
+              >
+                {services[index].label}
+              </button>
+            </div>
+          ))}
+        </div>
+
+      </div>
+
+      <div className="service-cards-container">
+        {/* Services */}
+        {services.map((service, index) => (
           <div
             key={index}
-            className={`service-card ${service.className}`}
+            ref={(el) => {
+              serviceRefs.current[index] = el;
+            }}
+            className={`service-card ${service.className} ${currentServiceIndex === index ? "active" : ""
+              }`}
           >
-            {/* <h1 className="service-label">{service.label}</h1> */}
             <div className="card-rows">
               <h1 className="service-title">{service.title}</h1>
               <img
@@ -79,10 +151,23 @@ const Services = () => {
                 className="service-icon"
               />
               <p className="service-text">{service.text}</p>
+              <button
+                className="learn-more-button"
+                onClick={() => scrollToSection("contact")}
+              >
+                Get Started
+              </button>
             </div>
           </div>
-        );
-      })}
+        ))}
+      </div>
+
+
+
+
+
+
+
     </div>
   );
 };
