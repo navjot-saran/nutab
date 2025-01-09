@@ -36,17 +36,82 @@
   transform: translateY(-2px);
 }
 
+.nav-links .active-start-project {
+  background-color: #0067e7;
+}
+
 .nav-link.active {
   color: #0067e7;
 }
 
 .logo-light {
   display: block;
+  padding-left: 1.5rem;
 }
 
 .logo-dark {
   display: none;
 }
+
+/* Add these styles to your Header.css */
+
+.theme-toggle-container {
+  position: relative;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.theme-toggle-input {
+  display: none;
+}
+
+.slider {
+  position: relative;
+  width: 70px;
+  height: 34px;
+  background-color:  #0067e7;
+  border-radius: 50px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 12px rgba(3, 3, 3, 0.198);
+}
+
+.theme-toggle-input:checked + .slider {
+  background-color: #3f37c9;
+}
+
+.slider-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.sun {
+  left: 8px;
+}
+
+.moon {
+  right: 8px;
+  opacity: 0;
+}
+
+.theme-toggle-input:checked + .slider .moon {
+  opacity: 1;
+  right: 8px;
+}
+
+.theme-toggle-input:checked + .slider .sun {
+  opacity: 0;
+  left: 8px;
+}
+
+
 
 @media (min-width: 600px) {
 
@@ -59,11 +124,15 @@
     gap: 2rem;
   }
 
+  .mobile-menu{
+    display: none;
+  }
+
   .nav-links button {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1.1rem;
     font-weight: 500;
     margin-left: 15px;
     transition: color 0.3s ease;
@@ -71,10 +140,6 @@
 
   .nav-links button:hover {
     color: #0067e7;
-  }
-
-  .menu {
-    display: none;
   }
 
   .menu-button {
@@ -91,7 +156,6 @@
   }
 }
 
-
 /* Show mobile button on smaller screens, 600px is standard practice */
 @media (max-width: 600px) {
   .nav-links {
@@ -102,27 +166,13 @@
     display:none;    
   }
 
-  .menu {
-    display: block;
-    margin-right: 5%;
-    margin-top: 5%;
-    right: 0;
-    top: 0;
-    position: fixed;
-    width: 8vw;
-    max-width: calc(100vw - 0.5rem);
-    /* Prevents margin overflow */
-    z-index: 1;
-    cursor: pointer;
-  }
-
   .mob-right-nav {
     position: fixed;
     right: 0;
     top: 0;
     background: #0067e7;
     opacity: 95%;
-    height: 100vh;
+    height: fit-content;
     width: 50vw;
     z-index: 2;
     transform: translateX(100%);
@@ -130,7 +180,7 @@
     /* Optimize rendering */
     overflow-x: hidden;
     transition: transform 0.5s ease-in-out;
-    z-index: 999;
+    z-index: 2;
   }
 
   .mob-right-nav ul {
@@ -158,47 +208,87 @@
 
   }
 
-  .close {
-    float: right;
-    margin-right: 7.5%;
-    margin-top: 7.5%;
-    width: 8vw;
-    background: #0067e7;
-  }
-
   .open-nav {
     transform: translateX(0%);
+  }
+
+  .theme-toggle-container {
+    display:none;
+  }
+
+  /* -- MOBILE MENU -- */
+  .mobile-menu {
+    transition: transform 0.5s;
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
+    left:5vw;
+  }
+
+  .mobile-menu .line-1,
+  .mobile-menu .line-2,
+  .mobile-menu .line-3 {
+    border-top: 3px solid #000;
+    display: block;
+    transition: margin 0.5s, transform 0.5s;
+    width: 35px;
+  }
+
+  .mobile-menu .line-2 {
+    margin: 10px 0;
+  }
+
+  .mobile-menu.toggle {
+    transform: rotateX(180deg);
+  }
+
+  .mobile-menu.toggle .line-1 {
+    transform: rotate(45deg);
+  }
+
+  .mobile-menu.toggle .line-2 {
+    margin: -3px 0;
+    opacity: 0;
+  }
+
+  .mobile-menu.toggle .line-3 {
+    transform: rotate(-45deg);
   }
 }
 
 /* Switch to dark mode styles */
-@media (prefers-color-scheme: dark) {
-  .logo-light {
-    display: none;
-  }
+[data-theme="dark"] .logo-light {
+  display: none;
+}
 
-  .logo-dark {
-    display: block;
-  }
+[data-theme="dark"] .logo-dark {
+  display: block;
+  padding-left: 1.5rem;
+}
 
-  .header {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.752);
-  }
+[data-theme="dark"] .header {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.752);
+}
 
-  .nav-links button:hover {
-    color: #0067e7;
-  }
+[data-theme="dark"] .nav-links button:hover {
+  color: #0067e7;
+}
 
-  .menu {
-    filter: invert(1);
-  }
+[data-theme="dark"] .nav-links .start-project-btn {
+  background-color: #3A0CA3;
+  color: #ffffff;
+}
 
-  .nav-links .start-project-btn {
-    background-color: #3A0CA3;
-    color: #ffffff;
-  }
+[data-theme="dark"] .nav-links .start-project-btn:hover {
+  background-color: #0067e7;
+}
 
-  .nav-links .start-project-btn:hover {
-    background-color: #0067e7;
-  } 
+[data-theme="dark"] .nav-links .active-start-project {
+  background-color: #0067e7;
+}
+
+[data-theme="dark"] .mobile-menu .line-1,
+[data-theme="dark"] .mobile-menu .line-2,
+[data-theme="dark"] .mobile-menu .line-3 {
+  border-top: 3px solid #fff;
 }

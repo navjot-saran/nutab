@@ -2,6 +2,9 @@
   width: 50vw;
   box-sizing: border-box; 
   padding: 1rem; 
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
   margin-left: 2.5vw;
   margin-right: 2.5vw;
   background-color: rgb(255, 255, 255, 0.9);
@@ -52,36 +55,40 @@ textarea {
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+  margin-top: 0.5rem;
 }
 
 .submit-button:hover {
   background-color: #0067e7;
+  transform: translateY(-2px);
 }
 
 @media (max-width: 600px) {
   .contact-container{
-    width: 100vw;
+    width: 85vw;
+    margin-bottom: 10vh;
   }
   
 }
 
 /* Dark Mode Styling */
-@media (prefers-color-scheme: dark) {
-  .contact-container {
-    background-color: rgb(10, 10, 10, 0.9);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.752);
-  }
-
-  .submit-button {
-    background-color: #5232c8;
-  }
-
-  .submit-button:hover {
-    background-color: #0067e7;
-  }
-
-  #name,#email,#message{
-    color:black;
-  }
+[data-theme="dark"] .contact-container {
+  background-color: rgba(10, 10, 10, 0.9); /* Dark mode background with 90% opacity */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.752);
 }
 
+[data-theme="dark"] .submit-button {
+  background-color: #3f37c9;
+}
+
+[data-theme="dark"] .submit-button:hover {
+  background-color: #0067e7;
+}
+
+[data-theme="dark"] .name-textarea,
+[data-theme="dark"] .email-textarea,
+[data-theme="dark"] .message-textarea {
+  color: black; /* Text color inside textareas */
+}

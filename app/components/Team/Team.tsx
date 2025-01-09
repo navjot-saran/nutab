@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Team.css";
 
-const Team: React.FC = () => {
+// currentSection from page.tsx
+interface TeamProps {
+  currentSection: number;
+}
+
+const Team: React.FC<TeamProps> = ({ currentSection }) => {
+
+  
   return (
     <section className="team-section">
       <h2 className="team-header">Our Team</h2>
